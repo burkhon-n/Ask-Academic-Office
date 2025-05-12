@@ -42,8 +42,8 @@ async def handle_text_message(message: Message):
         question = message.text
         answer = get_answer(question)
         
-        if answer.output_text.startswith("FORWARD_TO_ADMIN"):
-            language_code = answer.output_text.split(",")[1].strip()
+        if answer.startswith("FORWARD_TO_ADMIN"):
+            language_code = answer.split(",")[1].strip()
             if language_code not in ["uz", "ru", "en"]:
                 await bot.send_message(
                     chat_id=message.chat.id,
@@ -66,7 +66,7 @@ async def handle_text_message(message: Message):
         else:
             await bot.send_message(
                 chat_id=message.chat.id,
-                text=answer.output_text
+                text=answer
             )
 
     else:
@@ -108,7 +108,7 @@ async def handle_file_message(message: Message):
         )
         await bot.send_message(
             message.chat.id,
-            text="Javobni birozdan so‘ng beramiz. Iltimos kuting.",
+            text=translations['wait'][message.from_user.language_code if message.from_user.language_code in ["uz", "ru", "en"] else "en"],
             reply_markup=None
         )
     else:

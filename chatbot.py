@@ -23,8 +23,26 @@ client.vector_stores.files.create(
     file_id=create_file(client, "faq-newuu.txt"),
 )
 
-def get_answer(question: str, history: list = []):
-    # Create a new response using the OpenAI client
+def get_answer(question: str):
+    language = detect_language(question)  # Returns 'uz', 'ru', or 'en'
+
+    system_prompt = f"""You are a helpful and professional assistant for New Uzbekistan University (In Uzbek: "Yangi O‘zbekiston Universiteti").
+    Your task is to automatically respond to frequently asked questions about the university in the same language the user uses — Uzbek (uz), Russian (ru), or English (en).
+
+    Use ONLY the information in the provided FAQ dataset. Do not guess or make up answers.
+
+    Do not include formatting with symbols!
+
+    If the question matches any known FAQ (even if phrased differently), respond with the relevant answer from the dataset in the same language the user used.
+
+    Rules:
+    - Answer in the language: {language}
+    - If the answer is only available in English, translate it into the user’s language before replying.
+    - If no relevant answer is found, respond exactly with: FORWARD_TO_ADMIN, {language}
+    - Do NOT invent, explain, translate, or rephrase anything.
+    - Output plain text only — no formatting, explanations, or additional notes.
+    """
+
     response = client.responses.create(
         model="gpt-4o-mini",
         input=[
@@ -33,7 +51,7 @@ def get_answer(question: str, history: list = []):
                 "content": [
                     {
                         "type": "input_text",
-                        "text": f"You are a helpful and professional assistant for New Uzbekistan University (In Uzbek: \"Yangi O‘zbekiston Universiteti\"). Your task is to automatically respond to frequently asked questions about the university in the same language the user uses (Uzbek, Russian, or English).\n\nUse only the information in the provided FAQ dataset. If the user's question matches any known question in meaning (even if phrased differently), respond with the relevant answer from the dataset in the same language the user used.\n\nIf the question is unrelated or cannot be answered with the available data, respond with exactly:\"FORWARD_TO_ADMIN, <the language code (uz, ru, en) only>\"\n\nNever invent or assume information not present in the dataset. Do not include explanations or translations in your response.\n"
+                        "text": system_prompt
                     }
                 ]
             },
@@ -47,22 +65,20 @@ def get_answer(question: str, history: list = []):
                 ]
             }
         ],
-        text={
-            "format": {
-                "type": "text"
-            }
-        },
+        text={"format": {"type": "text"}},
         reasoning={},
         tools=[{
             "type": "file_search",
             "vector_store_ids": [vector_store.id]
         }],
-        temperature=1,
+        temperature=0,
         max_output_tokens=2048,
         top_p=1,
         store=True
     )
-    return response
+    return response.output_text.strip()
+
+    
 
 def detect_language(text: str) -> str:
     response = client.responses.create(
@@ -86,7 +102,7 @@ def detect_language(text: str) -> str:
         reasoning={},
         tools=[],
         temperature=0,
-        max_output_tokens=10,
+        max_output_tokens=16,
         top_p=1
     )
     return response.output_text.strip()
