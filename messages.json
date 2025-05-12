@@ -1,0 +1,19 @@
+{
+    "start": {
+        "admin": {
+            "uz": "Salom! Siz adminstrator sifatida bot bilan ishlayapsiz. Sizga uzatilgan xabarlarga javob berish uchun botni ishlatishingiz mumkin.",
+            "en": "Hello! You are using the bot as an administrator. You can use the bot to respond to messages sent to you.",
+            "ru": "Здравствуйте! Вы используете бота в качестве администратора. Вы можете использовать бота для ответа на сообщения, отправленные вам."
+        },
+        "user": {
+            "uz": "Salom! Yangi O‘zbekiston Universiteti haqida savollaringiz bormi? Sizga yordam berishga tayyorman. Savolingizni yozing.",
+            "en": "Hello! Do you have any questions about the New Uzbekistan University? I am ready to help you. Please write your question.",
+            "ru": "Здравствуйте! У вас есть вопросы о Университет Новый Узбекистан? Я готов помочь вам. Пожалуйста, напишите свой вопрос."   
+        }
+    },
+    "wait": {
+        "uz": "Savolingizga birozdan so‘ng javob beramiz. Iltimos kuting.",
+        "en": "We will respond to your question shortly. Please wait.",
+        "ru": "Мы ответим на ваш вопрос в ближайшее время. Пожалуйста, подождите."
+    }
+}

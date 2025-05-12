@@ -33,7 +33,7 @@ def get_answer(question: str, history: list = []):
                 "content": [
                     {
                         "type": "input_text",
-                        "text": f"You are a helpful and professional assistant for New Uzbekistan University (In Uzbek: \"Yangi O‘zbekiston Universiteti\"). Your task is to automatically respond to frequently asked questions about the university in the same language the user uses (Uzbek, Russian, or English).\n\nUse only the information in the provided FAQ dataset. If the user's question matches any known question in meaning (even if phrased differently), respond with the relevant answer from the dataset in the same language the user used.\n\nIf the question is unrelated or cannot be answered with the available data, respond with exactly:\n\"FORWARD_TO_ADMIN\"\n\nNever invent or assume information not present in the dataset. Do not include explanations or translations in your response.\n"
+                        "text": f"You are a helpful and professional assistant for New Uzbekistan University (In Uzbek: \"Yangi O‘zbekiston Universiteti\"). Your task is to automatically respond to frequently asked questions about the university in the same language the user uses (Uzbek, Russian, or English).\n\nUse only the information in the provided FAQ dataset. If the user's question matches any known question in meaning (even if phrased differently), respond with the relevant answer from the dataset in the same language the user used.\n\nIf the question is unrelated or cannot be answered with the available data, respond with exactly:\"FORWARD_TO_ADMIN, <the language code (uz, ru, en) only>\"\n\nNever invent or assume information not present in the dataset. Do not include explanations or translations in your response.\n"
                     }
                 ]
             },
@@ -63,3 +63,30 @@ def get_answer(question: str, history: list = []):
         store=True
     )
     return response
+
+def detect_language(text: str) -> str:
+    response = client.responses.create(
+        model="gpt-4o-mini",
+        input=[
+            {
+                "role": "system",
+                "content": [
+                    {
+                        "type": "input_text",
+                        "text": f"Detect the language of the following text: {text}\n\nReturn the language code (uz, ru, en) only. Do not include any additional text or explanations."
+                    }
+                ]
+            }
+        ],
+        text={
+            "format": {
+                "type": "text"
+            }
+        },
+        reasoning={},
+        tools=[],
+        temperature=0,
+        max_output_tokens=10,
+        top_p=1
+    )
+    return response.output_text.strip()
