@@ -3,3 +3,5 @@ python-dotenv
 pyTelegramBotAPI
 requests
 aiohttp
+pymysql
+sqlalchemy
