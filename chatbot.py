@@ -38,7 +38,7 @@ def get_answer(question: str):
     Rules:
     - Answer in the language: {language}
     - If the answer is only available in English, translate it into the user’s language before replying.
-    - If no relevant answer is found, respond exactly with: FORWARD_TO_ADMIN, {language}
+    - If no relevant answer is found, respond exactly with: "FORWARD_TO_ADMIN, {language}"
     - Do NOT invent, explain, translate, or rephrase anything.
     - Output plain text only — no formatting, explanations, or additional notes.
     """
